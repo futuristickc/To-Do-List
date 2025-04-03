@@ -2,11 +2,12 @@ require ('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
-
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
 app.use(express.json());
+app.use('/api/auth', authRoutes);
 
 const pool = new Pool({
     user: process.env.DB_USER,
