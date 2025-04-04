@@ -1,122 +1,101 @@
 <template>
-    <v-container>
-      <v-card class="pa-5">
-        <v-card-title class="text-center text-h5">To-Do List</v-card-title>
-        <v-card-text>
-          <v-form @submit.prevent="addTodo">
-            <v-text-field v-model="newTodo" label="New Task" required />
-            <v-btn type="submit" color="primary" block class="mt-3">Add Task</v-btn>
-          </v-form>
-        </v-card-text>
-      </v-card>
+    <div class="container mt-4">
+      <h2 class="mb-4">My To-Do List</h2>
   
-      <v-list two-line class="mt-5">
-        <v-list-item-group>
-          <v-list-item v-for="todo in todos" :key="todo.id">
-            <v-list-item-content>
-              <v-list-item-title>{{ todo.title }}</v-list-item-title>
-            </v-list-item-content>
-            <v-list-item-action>
-              <v-btn icon color="blue" @click="editTodo(todo)">
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-              <v-btn icon color="red" @click="deleteTodo(todo.id)">
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </v-list-item-action>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
+      <!-- Add New To-Do Form -->
+      <form @submit.prevent="addTodo">
+        <div class="mb-3">
+          <input v-model="newTodo.title" type="text" class="form-control" placeholder="Title" required />
+        </div>
+        <div class="mb-3">
+          <textarea v-model="newTodo.description" class="form-control" placeholder="Description" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Add To-Do</button>
+      </form>
   
-      <!-- Edit Dialog -->
-      <v-dialog v-model="editDialog" max-width="500px">
-        <v-card>
-          <v-card-title>Edit To-Do</v-card-title>
-          <v-card-text>
-            <v-text-field v-model="editTodoTitle" label="Task Title" />
-          </v-card-text>
-          <v-card-actions>
-            <v-btn color="primary" @click="updateTodo">Save</v-btn>
-            <v-btn color="grey" @click="editDialog = false">Cancel</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-container>
+      <hr />
+  
+      <!-- Display To-Do List -->
+      <ul class="list-group">
+        <li v-for="todo in todos" :key="todo.id" class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <h5>{{ todo.title }}</h5>
+            <p>{{ todo.description }}</p>
+          </div>
+          <div>
+            <button class="btn btn-success me-2" @click="toggleComplete(todo)">
+              {{ todo.completed ? "Undo" : "Complete" }}
+            </button>
+            <button class="btn btn-danger" @click="deleteTodo(todo.id)">Delete</button>
+          </div>
+        </li>
+      </ul>
+    </div>
   </template>
   
   <script>
-  import axios from 'axios';
+  import axios from "axios";
   
   export default {
     data() {
       return {
         todos: [],
-        newTodo: '',
-        editDialog: false,
-        editTodoId: null,
-        editTodoTitle: '',
+        newTodo: {
+          title: "",
+          description: ""
+        }
       };
+    },
+    async created() {
+      await this.fetchTodos();
     },
     methods: {
       async fetchTodos() {
         try {
-          const token = localStorage.getItem('token');
-          const response = await axios.get('http://localhost:8080/api/todos', {
-            headers: { Authorization: `Bearer ${token}` },
+          const response = await axios.get("http://localhost:8080/api/todos", {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
           });
           this.todos = response.data;
         } catch (error) {
-          console.error('Error fetching todos:', error.response?.data?.message || 'Server error');
+          console.error("Error fetching todos", error);
         }
       },
       async addTodo() {
-        if (!this.newTodo) return;
         try {
-          const token = localStorage.getItem('token');
-          const response = await axios.post('http://localhost:8080/api/todos', 
-            { title: this.newTodo },
-            { headers: { Authorization: `Bearer ${token}` } }
+          const response = await axios.post(
+            "http://localhost:8080/api/todos",
+            this.newTodo,
+            { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
           );
-          this.todos.push(response.data);
-          this.newTodo = '';
+          this.todos.unshift(response.data);
+          this.newTodo.title = "";
+          this.newTodo.description = "";
         } catch (error) {
-          console.error('Error adding todo:', error.response?.data?.message || 'Server error');
+          console.error("Error adding todo", error);
         }
       },
-      editTodo(todo) {
-        this.editTodoId = todo.id;
-        this.editTodoTitle = todo.title;
-        this.editDialog = true;
-      },
-      async updateTodo() {
-        if (!this.editTodoTitle) return;
+      async toggleComplete(todo) {
         try {
-          const token = localStorage.getItem('token');
-          const response = await axios.put(`http://localhost:8080/api/todos/${this.editTodoId}`,
-            { title: this.editTodoTitle },
-            { headers: { Authorization: `Bearer ${token}` } }
+          const response = await axios.put(
+            `http://localhost:8080/api/todos/${todo.id}`,
+            { completed: !todo.completed },
+            { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
           );
-          const index = this.todos.findIndex(todo => todo.id === this.editTodoId);
-          if (index !== -1) this.todos[index] = response.data;
-          this.editDialog = false;
+          todo.completed = response.data.completed;
         } catch (error) {
-          console.error('Error updating todo:', error.response?.data?.message || 'Server error');
+          console.error("Error updating todo", error);
         }
       },
       async deleteTodo(id) {
         try {
-          const token = localStorage.getItem('token');
           await axios.delete(`http://localhost:8080/api/todos/${id}`, {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
           });
           this.todos = this.todos.filter(todo => todo.id !== id);
         } catch (error) {
-          console.error('Error deleting todo:', error.response?.data?.message || 'Server error');
+          console.error("Error deleting todo", error);
         }
-      },
-    },
-    mounted() {
-      this.fetchTodos();
-    },
+      }
+    }
   };
   </script>

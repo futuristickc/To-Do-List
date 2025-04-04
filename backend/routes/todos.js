@@ -62,12 +62,12 @@ router.put('/:id', authMiddleware, async (req, res) => {
 //Delete a todo (DELETE)
 router.delete('/:id', authMiddleware, async (req, res) => {
     try {
-        const user_id = req.body.user_id;
-        const todo_id = req.params.todo_id;
+        const user_id = req.user.user_id;
+        const todo_id = req.params.id;
 
         const deleteTodo = await pool.query(
-            'DELETE FROM todos WHERE user_id = $1 AND todo_id = $2 RETURNING *',
-            [user_id, todo_id]
+            'DELETE FROM todos WHERE user_id = $1 AND id = $2 RETURNING *',
+            [todo_id, user_id]
         );
 
         if (deleteTodo.rows.length === 0) {

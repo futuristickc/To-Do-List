@@ -9,8 +9,9 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 const corsOptions = {
     origin: '*',  // Allow requests from all origins
-    methods: 'GET,POST,PUT,DELETE',  // Allow specific HTTP methods
-    allowedHeaders: 'Content-Type,Authorization',  // Allow specific headers
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow specific HTTP methods
+    allowedHeaders: ['Content-Type,Authorization'],  // Allow specific headers
+    credentials: true,
   };
 
 app.use(cors(corsOptions));

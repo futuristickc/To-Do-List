@@ -1,19 +1,23 @@
 <template>
-    <v-container class="fill-height d-flex justify-center align-center">
-      <v-card class="pa-5" width="400">
-        <v-card-title class="text-center">Login </v-card-title>
-        <v-card-text>
-          <v-form @submit.prevent="loginUser">
-            <v-text-field v-model="email" label="Email" type="email" required />
-            <v-text-field v-model="password" label="Password" type="password" required />
-            <v-btn type="submit" color="primary" block class="mt-3">Login</v-btn>
-          </v-form>
+    <b-container class="d-flex justify-content-center align-items-center vh-100">
+      <b-card class="w-50 p-4">
+        <b-card-title class="text-center">Login</b-card-title>
+        <b-card-body>
+          <b-form @submit.prevent="loginUser">
+            <b-form-group label="Email" label-for="email">
+              <b-form-input id="email" v-model="email" type="email" required></b-form-input>
+            </b-form-group>
+            <b-form-group label="Password" label-for="password">
+              <b-form-input id="password" v-model="password" type="password" required></b-form-input>
+            </b-form-group>
+            <b-button type="submit" variant="primary" block>Login</b-button>
+          </b-form>
           <p class="mt-3 text-center">
             Don't have an account? <router-link to="/register">Register</router-link>
           </p>
-        </v-card-text>
-      </v-card>
-    </v-container>
+        </b-card-body>
+      </b-card>
+    </b-container>
   </template>
   
   <script>
