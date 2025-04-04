@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const pool = require('./db');
 const authRoutes = require('./routes/auth');
+const todoRoutes = require('./routes/todos');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -19,6 +20,7 @@ app.use((req, res, next) => {
     next();
 });
 app.use('/api/auth', authRoutes);
+app.use('/api/todos', todoRoutes);
 
 
 app.get('/', (req, res) => {
