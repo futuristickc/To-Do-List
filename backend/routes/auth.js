@@ -25,7 +25,7 @@ router.post('/register', async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        //Inserting the user into the database
+        
         const newUser = await pool.query(
             'INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *',
             [username, email, hashedPassword]
@@ -39,12 +39,12 @@ router.post('/register', async (req, res) => {
     }
 });
 
-//Login User
+
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        //Check if email is entered correctly
+        
         const userEmail = await pool.query(
             'SELECT * FROM users WHERE email = $1', [email]
         );
@@ -57,7 +57,7 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ message: 'Invalid Credentials' });
         };
 
-        //Now Generate jwt token
+        
         const token = jwt.sign({ userid: userEmail.rows[0].id }, process.env.JWT_SECRET, {
             expiresIn: '1h',
         });
@@ -69,13 +69,6 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// router.get('/profile', authMiddleware, async (req, res) => {
-//     try {
-//         const user = await pool.query('SELECT id, username, email FROM users WHERE id = $1', [req.user.userId]);
-//         res.json(user.rows[0]);
-//     } catch (error) {
-//         res.status(500).json({ message: 'Server error' });
-//     }
-// });
+
 
 module.exports = router;

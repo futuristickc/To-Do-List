@@ -2,7 +2,7 @@
     <div class="container mt-4">
       <h2 class="mb-4">My To-Do List</h2>
   
-      <!-- Add New To-Do Form -->
+      
       <form @submit.prevent="addTodo">
         <div class="mb-3">
           <input v-model="newTodo.title" type="text" class="form-control" placeholder="Title" required />
@@ -15,7 +15,7 @@
   
       <hr />
   
-      <!-- Display To-Do List -->
+      
       <ul class="list-group">
         <li v-for="todo in todos" :key="todo.id" class="list-group-item d-flex justify-content-between align-items-center">
           <div>

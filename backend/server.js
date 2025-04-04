@@ -8,9 +8,9 @@ const todoRoutes = require('./routes/todos');
 const app = express();
 const PORT = process.env.PORT || 8080;
 const corsOptions = {
-    origin: '*',  // Allow requests from all origins
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow specific HTTP methods
-    allowedHeaders: ['Content-Type,Authorization'],  // Allow specific headers
+    origin: '*',  
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],  
+    allowedHeaders: ['Content-Type,Authorization'],  
     credentials: true,
   };
 

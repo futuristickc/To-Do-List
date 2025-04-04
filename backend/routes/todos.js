@@ -4,12 +4,11 @@ const pool = require('../db');
 const authMiddleware = require('../middleware/authMiddleware');
 
 
-//create a new todo (post)
+
 router.post('/', authMiddleware, async (req, res) => {
     try {
         const { title, description } = req.body;
-        const user_id = req.user.user_id; //get user id from jwt
-
+        const user_id = req.user.user_id; 
         const newTodo = await pool.query(
             'INSERT INTO todos (user_id, title, description) VALUES ($1, $2, $3) RETURNING *',
             [user_id, title, description]
@@ -21,7 +20,7 @@ router.post('/', authMiddleware, async (req, res) => {
     }
 });
 
-//Get all todos for logged-in user
+
 router.get('/', authMiddleware, async (req, res) => {
     try {
         const user_id = req.user.user_id;
@@ -37,7 +36,7 @@ router.get('/', authMiddleware, async (req, res) => {
     }
 });
 
-//update a todo PUT request
+
 router.put('/:id', authMiddleware, async (req, res) => {
     try {
         const { title, description, completed } = req.body;
@@ -59,7 +58,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
     }
 });
 
-//Delete a todo (DELETE)
+
 router.delete('/:id', authMiddleware, async (req, res) => {
     try {
         const user_id = req.user.user_id;

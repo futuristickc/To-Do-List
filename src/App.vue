@@ -6,7 +6,6 @@
 </template>
 
 <script>
-// import TodoList from "./pages/TodoList.vue";
 import TodoList from "./pages/TodoList.vue";
 
 export default {
