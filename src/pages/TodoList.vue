@@ -31,9 +31,9 @@
         </li>
       </ul>
     </div>
-  </template>
+</template>
   
-  <script>
+<script>
   import axios from "axios";
   
   export default {
@@ -75,27 +75,57 @@
         }
       },
       async toggleComplete(todo) {
-        try {
-          const response = await axios.put(
-            `http://localhost:8080/api/todos/${todo.id}`,
-            { completed: !todo.completed },
-            { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
-          );
-          todo.completed = response.data.completed;
-        } catch (error) {
-          console.error("Error updating todo", error);
-        }
+  try {
+    const url = `http://localhost:8080/api/todos/${todo.id}`;
+    console.log("Making PUT request to:", url);  // confirm URL in console
+    const response = await axios.put(
+      url,
+      {
+        title: todo.title,
+        description: todo.description,
+        completed: !todo.completed,
       },
-      async deleteTodo(id) {
-        try {
-          await axios.delete(`http://localhost:8080/api/todos/${id}`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-          });
-          this.todos = this.todos.filter(todo => todo.id !== id);
-        } catch (error) {
-          console.error("Error deleting todo", error);
-        }
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       }
+    );
+    todo.completed = response.data.completed;
+  } catch (error) {
+    console.error("Error updating todo", error);
+  }
+},
+
+async deleteTodo(todo) {
+  try {
+    const url = `http://localhost:8080/api/todos/${todo.id}`;
+    console.log("Making DELETE request to:", url);  // helpful for debugging
+
+    await axios.delete(url, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    // Optionally remove the todo from the local list:
+    this.todos = this.todos.filter(t => t.id !== todo.id);
+  } catch (error) {
+    console.error("Error deleting todo", error);
+  }
+}
+
+
+      // async deleteTodo(id) {
+      //   try {
+      //     await axios.delete(`http://localhost:8080/api/todos/${id}`, {
+      //       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      //     });
+      //     this.todos = this.todos.filter(todo => todo.id !== id);
+      //   } catch (error) {
+      //     console.error("Error deleting todo", error);
+      //   }
+      // }
     }
   };
-  </script>
+</script>

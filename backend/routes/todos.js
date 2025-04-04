@@ -37,25 +37,25 @@ router.get('/', authMiddleware, async (req, res) => {
 });
 
 
-router.put('/:id', authMiddleware, async (req, res) => {
-    try {
-        const { title, description, completed } = req.body;
-        const user_id = req.user.user_id;
-        const todo_id = req.params.id
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { title, description, completed } = req.body;
 
-        const updateTodo = await pool.query(
-            'UPDATE todos SET title = $1, description = $2, completed = $3 WHERE id = $4 AND user_id = $5 RETURNING *',
-            [title, description, completed, todo_id, user_id]
-        );
+  try {
+    const result = await pool.query(
+      'UPDATE todos SET title = $1, description = $2, completed = $3 WHERE id = $4 RETURNING *',
+      [title, description, completed, id]
+    );
 
-        if (updateTodo.rows.length === 0 ) {
-            return res.status(404).json({ message: 'Todo not found'})
-        };
-
-        res.json(updateTodo.rows[0]);
-    } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Todo not found' });
     }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
 });
 
 
@@ -66,11 +66,11 @@ router.delete('/:id', authMiddleware, async (req, res) => {
 
         const deleteTodo = await pool.query(
             'DELETE FROM todos WHERE user_id = $1 AND id = $2 RETURNING *',
-            [todo_id, user_id]
+            [user_id, todo_id]
         );
 
         if (deleteTodo.rows.length === 0) {
-            res.status(404).json({ message: 'Todo not found' });
+            return res.status(404).json({ message: 'Todo not found' });
         };
 
         res.json({ message: 'Todo successfully removed' });

@@ -12,6 +12,6 @@ import 'bootstrap-vue-3/dist/bootstrap-vue-3.css';
 // const vuetify = createVuetify();
 
 const app = createApp(App);
-app.use(BootstrapVue3);
 app.use(router);
 app.mount('#app');
+app.use(BootstrapVue3);

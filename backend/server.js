@@ -4,13 +4,14 @@ const cors = require('cors');
 const pool = require('./db');
 const authRoutes = require('./routes/auth');
 const todoRoutes = require('./routes/todos');
+const authMiddleware = require('./middleware/authMiddleware');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 const corsOptions = {
-    origin: '*',  
+    origin: 'http://localhost:5173',  
     methods: ['GET', 'POST', 'PUT', 'DELETE'],  
-    allowedHeaders: ['Content-Type,Authorization'],  
+    allowedHeaders: ['Content-Type', 'Authorization'],  
     credentials: true,
   };
 
@@ -21,7 +22,7 @@ app.use((req, res, next) => {
     next();
 });
 app.use('/api/auth', authRoutes);
-app.use('/api/todos', todoRoutes);
+app.use('/api/todos', authMiddleware, todoRoutes);
 
 
 app.get('/', (req, res) => {
