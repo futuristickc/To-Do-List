@@ -44,7 +44,7 @@
           });
   
           console.log('Registration successful:', response.data);
-          this.$router.push('/'); // Redirect to login page
+          this.$router.push('/'); 
         } catch (error) {
           console.error('Registration error:', error.response?.data?.message || 'Server error');
         }

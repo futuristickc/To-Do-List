@@ -39,9 +39,9 @@
           });
   
           console.log('Login successful:', response.data);
-          localStorage.setItem('token', response.data.token); // Store token
-          this.$router.push('/todos'); // Redirect to To-Do List
-          window.location.reload(); //Ensure token is applied
+          localStorage.setItem('token', response.data.token); 
+          this.$router.push('/todos'); 
+          window.location.reload(); 
         } catch (error) {
           console.error('Login error:', error.response?.data?.message || 'Server error');
         }

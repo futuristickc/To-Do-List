@@ -15,7 +15,7 @@ const router = createRouter({
     routes,
 });
 
-// Navigation Guard
+
 router.beforeEach((to, from, next) => {
     const publicPages = ['/login', '/register'];
     const authRequired = !publicPages.includes(to.path);
@@ -25,15 +25,15 @@ router.beforeEach((to, from, next) => {
   
     if (authRequired && !token) {
         console.log("[NAV GUARD] No token, redirecting to login");
-      return next('/login'); // Redirect to login if not logged in
+      return next('/login'); 
     }
   
     if ((to.path === '/login' || to.path === '/register') && token) {
         console.log("[NAV GUARD] Already logged in, redirecting to /todos");
-      return next('/todos'); // Redirect logged in users away from login/register
+      return next('/todos'); 
     }
   
-    next(); // Allow navigation
+    next(); 
   });
 
 

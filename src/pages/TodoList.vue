@@ -77,7 +77,7 @@
       async toggleComplete(todo) {
   try {
     const url = `http://localhost:8080/api/todos/${todo.id}`;
-    console.log("Making PUT request to:", url);  // confirm URL in console
+    console.log("Making PUT request to:", url);  
     const response = await axios.put(
       url,
       {
@@ -100,7 +100,7 @@
 async deleteTodo(todo) {
   try {
     const url = `http://localhost:8080/api/todos/${todo.id}`;
-    console.log("Making DELETE request to:", url);  // helpful for debugging
+    console.log("Making DELETE request to:", url);  
 
     await axios.delete(url, {
       headers: {
@@ -108,24 +108,13 @@ async deleteTodo(todo) {
       },
     });
 
-    // Optionally remove the todo from the local list:
+    
     this.todos = this.todos.filter(t => t.id !== todo.id);
   } catch (error) {
     console.error("Error deleting todo", error);
   }
 }
 
-
-      // async deleteTodo(id) {
-      //   try {
-      //     await axios.delete(`http://localhost:8080/api/todos/${id}`, {
-      //       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-      //     });
-      //     this.todos = this.todos.filter(todo => todo.id !== id);
-      //   } catch (error) {
-      //     console.error("Error deleting todo", error);
-      //   }
-      // }
     }
   };
 </script>

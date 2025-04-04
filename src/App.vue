@@ -24,7 +24,7 @@ export default {
   methods: {
     logout() {
       localStorage.removeItem("token");
-      window.location.href = "/login"; // Update path if needed
+      window.location.href = "/login"; 
     }
   }
 };
